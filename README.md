@@ -1,18 +1,21 @@
-# chrome-tab-groups-api — Tab Groups for Chrome Extensions
+# chrome-tab-groups-api
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+Manage tab groups in Chrome extensions.
 
-> **Built by [Zovo](https://zovo.one)**
+## Installation
 
-**Chrome Tab Groups API wrapper** — create groups, auto-group by domain, collapse/expand, color code, and presets (social, email, dev, shopping).
-
-## 🚀 Quick Start
-```typescript
-import { TabGroupManager, TabGroupPresets } from 'chrome-tab-groups-api';
-await TabGroupManager.groupByDomain();
-await TabGroupPresets.groupSocial();
-await TabGroupManager.collapseAll();
+```bash
+npm install chrome-tab-groups-api
 ```
 
-## 📄 License
-MIT — [Zovo](https://zovo.one)
+## Usage
+
+```javascript
+import { TabGroups } from 'chrome-tab-groups-api';
+
+const groups = await TabGroups.list();
+```
+
+## License
+
+MIT
