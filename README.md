@@ -3,100 +3,119 @@
 [![npm version](https://img.shields.io/npm/v/chrome-tab-groups-api)](https://npmjs.com/package/chrome-tab-groups-api)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
-[![Chrome Web Extension](https://img.shields.io/badge/Chrome-Web%20Extension-orange.svg)](https://developer.chrome.com/docs/extensions/)
 [![CI Status](https://github.com/theluckystrike/chrome-tab-groups-api/actions/workflows/ci.yml/badge.svg)](https://github.com/theluckystrike/chrome-tab-groups-api/actions)
-[![Discord](https://img.shields.io/badge/Discord-Zovo-blueviolet.svg?logo=discord)](https://discord.gg/zovo)
-[![Website](https://img.shields.io/badge/Website-zovo.one-blue)](https://zovo.one)
-[![GitHub Stars](https://img.shields.io/github/stars/theluckystrike/chrome-tab-groups-api?style=social)](https://github.com/theluckystrike/chrome-tab-groups-api)
 
-> Manage tab groups in Chrome extensions.
+A lightweight TypeScript wrapper around Chrome's tab groups API for Manifest V3 extensions. Zero dependencies. Provides a clean static interface for creating, updating, collapsing, and organizing tab groups, plus built-in presets for common grouping patterns like social media, email, shopping, and dev tabs.
 
-**chrome-tab-groups-api** provides utilities to create and manage tab groups in Chrome extensions. Part of the Zovo Chrome extension utilities.
-
-Part of the [Zovo](https://zovo.one) developer tools family.
-
-## Overview
-
-chrome-tab-groups-api provides utilities to create and manage tab groups.
-
-## Features
-
-- ✅ **Create Groups** - Create new tab groups
-- ✅ **List Groups** - Get all tab groups
-- ✅ **Update Groups** - Modify group properties
-- ✅ **Delete Groups** - Remove tab groups
-- ✅ **TypeScript Support** - Full type definitions included
-
-## Installation
+INSTALLATION
 
 ```bash
 npm install chrome-tab-groups-api
 ```
 
-## Usage
+Your extension manifest needs the `tabGroups` and `tabs` permissions.
 
-```javascript
-import { TabGroups } from 'chrome-tab-groups-api';
+USAGE
 
-// List all groups
-const groups = await TabGroups.list();
+```typescript
+import { TabGroupManager, TabGroupPresets } from 'chrome-tab-groups-api';
 
-// Create a new group
-const group = await TabGroups.create('Work', { color: 'blue' });
+// Create a group from specific tabs
+const groupId = await TabGroupManager.create([tabId1, tabId2], 'Research', 'blue');
 
-// Add tab to group
-await TabGroups.addTab(tabId, group.id);
+// Group all tabs by domain automatically
+const domainGroups = await TabGroupManager.groupByDomain();
 
-// Move tab out of group
-await TabGroups.removeTab(tabId);
+// Collapse or expand a group
+await TabGroupManager.collapse(groupId);
+await TabGroupManager.expand(groupId);
 
-// Update group
-await TabGroups.update(group.id, { title: 'Important' });
+// Collapse every group in the current window
+await TabGroupManager.collapseAll();
 
-// Delete group
-await TabGroups.delete(group.id);
+// Rename or recolor a group
+await TabGroupManager.rename(groupId, 'Important');
+await TabGroupManager.setColor(groupId, 'red');
+
+// Add a single tab to an existing group
+await TabGroupManager.addTab(tabId, groupId);
+
+// Ungroup all tabs (removes the group container)
+await TabGroupManager.ungroup(groupId);
+
+// Close every tab in a group
+await TabGroupManager.closeGroup(groupId);
+
+// Get all groups
+const allGroups = await TabGroupManager.getAll();
 ```
 
-## API
+PRESETS
 
-### Methods
+TabGroupPresets offers one-call grouping for common tab categories. Each method scans the current window and groups matching tabs together. Returns the group ID or null if no matching tabs were found.
 
-| Method | Description |
-|--------|-------------|
-| `TabGroups.list(windowId?)` | List all groups |
-| `TabGroups.create(title, options?)` | Create a new group |
-| `TabGroups.update(groupId, options)` | Update group properties |
-| `TabGroups.delete(groupId)` | Delete a group |
-| `TabGroups.addTab(tabId, groupId)` | Add tab to group |
-| `TabGroups.removeTab(tabId)` | Remove tab from group |
+```typescript
+import { TabGroupPresets } from 'chrome-tab-groups-api';
 
-## License
+await TabGroupPresets.groupSocial();   // facebook, twitter/x, instagram, linkedin, reddit, tiktok
+await TabGroupPresets.groupEmail();    // gmail, outlook, yahoo mail, proton
+await TabGroupPresets.groupShopping(); // amazon, ebay, etsy, aliexpress, walmart
+await TabGroupPresets.groupDev();      // github, stackoverflow, npm, chrome dev docs, localhost
+```
 
-MIT — [Zovo](https://zovo.one)
+API REFERENCE
 
-## Contributing
+TabGroupManager (static methods)
 
-Contributions are welcome! Please follow these steps:
+| Method | Returns | What it does |
+|--------|---------|--------------|
+| `create(tabIds, title?, color?)` | `Promise<number>` | Creates a group from an array of tab IDs with optional title and color |
+| `groupByDomain()` | `Promise<Map<string, number>>` | Groups all tabs in the current window by domain, skipping singletons |
+| `collapse(groupId)` | `Promise<void>` | Collapses a group |
+| `expand(groupId)` | `Promise<void>` | Expands a group |
+| `collapseAll()` | `Promise<void>` | Collapses every group in the current window |
+| `ungroup(groupId)` | `Promise<void>` | Removes all tabs from a group (dissolves the group) |
+| `getAll()` | `Promise<TabGroup[]>` | Returns all tab groups |
+| `rename(groupId, title)` | `Promise<void>` | Renames a group |
+| `setColor(groupId, color)` | `Promise<void>` | Changes a group's color |
+| `addTab(tabId, groupId)` | `Promise<void>` | Adds a single tab to an existing group |
+| `closeGroup(groupId)` | `Promise<void>` | Closes every tab in the group |
 
-1. **Fork** the repository
-2. **Create** a feature branch: `git checkout -b feature/groups-feature`
-3. **Make** your changes
-4. **Test** your changes: `npm test`
-5. **Commit** your changes: `git commit -m 'Add new feature'`
-6. **Push** to the branch: `git push origin feature/groups-feature`
-7. **Submit** a Pull Request
+Available colors: `grey`, `blue`, `red`, `yellow`, `green`, `pink`, `purple`, `cyan`, `orange`
 
-## See Also
+TabGroupPresets (static methods)
 
-### Related Zovo Repositories
+| Method | Color | Matched domains |
+|--------|-------|-----------------|
+| `groupSocial()` | pink | facebook, twitter/x, instagram, linkedin, reddit, tiktok |
+| `groupEmail()` | blue | gmail, outlook, yahoo mail, proton |
+| `groupShopping()` | orange | amazon, ebay, etsy, aliexpress, walmart |
+| `groupDev()` | green | github, stackoverflow, npm, chrome dev docs, localhost |
 
-- [chrome-tab-discard](https://github.com/theluckystrike/chrome-tab-discard) - Tab discarding
-- [chrome-tab-sort](https://github.com/theluckystrike/chrome-tab-sort) - Tab sorting
-- [webext-tabs-overview](https://github.com/theluckystrike/webext-tabs-overview) - Tab dashboard
+REQUIREMENTS
 
-### Zovo Chrome Extensions
+- Chrome 89+ (tab groups API support)
+- Manifest V3 extension
+- TypeScript 5.x (for development)
 
-- [Zovo Tab Manager](https://chrome.google.com/webstore/detail/zovo-tab-manager) - Manage tabs efficiently
-- [Zovo Focus](https://chrome.google.com/webstore/detail/zovo-focus) - Block distractions
+DEVELOPMENT
 
-Visit [zovo.one](https://zovo.one) for more information.
+```bash
+git clone https://github.com/theluckystrike/chrome-tab-groups-api.git
+cd chrome-tab-groups-api
+npm install
+npm run build
+npm test
+```
+
+CONTRIBUTING
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+LICENSE
+
+MIT. See [LICENSE](LICENSE) for details.
+
+---
+
+Built by [theluckystrike](https://github.com/theluckystrike) | [zovo.one](https://zovo.one)
