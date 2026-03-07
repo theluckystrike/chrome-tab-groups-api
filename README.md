@@ -1,9 +1,9 @@
-# chrome-tab-groups-api
+[![CI](https://github.com/theluckystrike/chrome-tab-groups-api/actions/workflows/ci.yml/badge.svg)](https://github.com/theluckystrike/chrome-tab-groups-api/actions)
+[![npm](https://img.shields.io/npm/v/chrome-tab-groups-api)](https://www.npmjs.com/package/chrome-tab-groups-api)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 
-[![npm version](https://img.shields.io/npm/v/chrome-tab-groups-api)](https://npmjs.com/package/chrome-tab-groups-api)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
-[![CI Status](https://github.com/theluckystrike/chrome-tab-groups-api/actions/workflows/ci.yml/badge.svg)](https://github.com/theluckystrike/chrome-tab-groups-api/actions)
+# chrome-tab-groups-api
 
 A lightweight TypeScript wrapper around Chrome's tab groups API for Manifest V3 extensions. Zero dependencies. Provides a clean static interface for creating, updating, collapsing, and organizing tab groups, plus built-in presets for common grouping patterns like social media, email, shopping, and dev tabs.
 
@@ -118,5 +118,4 @@ LICENSE
 MIT. See [LICENSE](LICENSE) for details.
 
 ---
-
-Built by [theluckystrike](https://github.com/theluckystrike) | [zovo.one](https://zovo.one)
+Built by [theluckystrike](https://github.com/theluckystrike) — [zovo.one](https://zovo.one)
