@@ -97,6 +97,7 @@ REQUIREMENTS
 - Chrome 89+ (tab groups API support)
 - Manifest V3 extension
 - TypeScript 5.x (for development)
+- Include `tabGroups` and `tabs` permissions in your manifest. See [Chrome Extension Guide](https://developer.chrome.com/docs/extensions/mv3/manifest/) for details.
 
 DEVELOPMENT
 
